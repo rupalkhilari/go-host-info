@@ -165,6 +165,7 @@ func IsPreemptible() (bool, error) {
 	if err != nil {
 		return false, err
 	}
+	fmt.Println("Got %s", respText)
 	if respText == "TRUE" {
 		return true, nil
 	}
@@ -178,7 +179,7 @@ func Tags() ([]string, error) {
 	if err != nil {
 		return []string{}, err
 	}
-
+	fmt.Println("Got %s", respText)
 	// Parse lines
 	tags := strings.Split(respText, "\n")
 	return tags, nil

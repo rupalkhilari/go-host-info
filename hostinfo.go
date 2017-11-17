@@ -63,7 +63,6 @@ func DetermineCurrentCloud() CloudProvider {
 // Runs all the cloud host info to retrieve details.
 
 func RunGCPCloudFuncs() {
-
 	gcp.FQDN()
 	gcp.PublicHostname()
 	gcp.Hostname()
@@ -72,11 +71,18 @@ func RunGCPCloudFuncs() {
 	gcp.Id()
 	gcp.Zone()
 	gcp.Type()
-
 	gcp.IsPreemptible()
 	gcp.Tags()
 }
 
 func RunAWSCloudFuncs() {
-
+	aws.FQDN()
+	aws.PublicHostname()
+	aws.Hostname()
+	aws.LocalIPAddress()
+	aws.PublicIPAddress()
+	aws.Id()
+	aws.Zone()
+	aws.Type()
+	aws.ImageId()
 }
