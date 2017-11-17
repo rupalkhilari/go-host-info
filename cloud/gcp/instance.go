@@ -161,7 +161,7 @@ func Type() (string, error) {
 
 // Gets the Pre-emptable setting
 func IsPreemptible() (bool, error) {
-	respText, _, err := makeRequest(fmt.Sprintf("%s/preemptible", INSTANCE_METADATA_URL))
+	respText, _, err := makeRequest(fmt.Sprintf("%s/scheduling/preemptible", INSTANCE_METADATA_URL))
 	if err != nil {
 		return false, err
 	}
