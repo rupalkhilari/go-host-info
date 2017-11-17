@@ -58,8 +58,11 @@ func makeRequest(url string) (string, int, error) {
 // acts as a good indication of whether the host running this
 // function is a GCP instance.
 func HasMetadataHost() bool {
-	respText, _, err := makeRequest(INSTANCE_METADATA_URL)
+	respText, statusCode, err := makeRequest(INSTANCE_METADATA_URL)
 	if err != nil {
+		return false
+	}
+	if statusCode == http.StatusNotFound {
 		return false
 	}
 	fmt.Println("Got %s", respText)

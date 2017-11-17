@@ -28,6 +28,6 @@ func IsCloudInstance() bool {
 		fmt.Println("This is a gcp host")
 		return true
 	}
-	fmt.Println("This host is no where")
+	fmt.Println("This host is not on any known cloud provider")
 	return false
 }
