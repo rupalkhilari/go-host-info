@@ -63,7 +63,7 @@ func HasMetadataHost() bool {
 	if statusCode == http.StatusNotFound {
 		return false
 	}
-	fmt.Println("Got %s", respText)
+	fmt.Printf("Got %s", respText)
 	return true
 }
 
@@ -73,7 +73,7 @@ func FQDN() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	fmt.Println("Got %s", respText)
+	fmt.Printf("Got %s", respText)
 	return respText, err
 }
 
@@ -84,7 +84,7 @@ func PublicHostname() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	fmt.Println("Got %s", respText)
+	fmt.Printf("Got %s", respText)
 	return respText, err
 }
 
@@ -94,7 +94,7 @@ func Hostname() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	fmt.Println("Got %s", respText)
+	fmt.Printf("Got %s", respText)
 	return respText, nil
 }
 
@@ -104,7 +104,7 @@ func PublicIPAddress() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	fmt.Println("Got %s", respText)
+	fmt.Printf("Got %s", respText)
 	return respText, nil
 }
 
@@ -124,7 +124,7 @@ func Id() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	fmt.Println("Got %s", respText)
+	fmt.Printf("Got %s", respText)
 	return respText, nil
 }
 
@@ -134,7 +134,7 @@ func Zone() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	fmt.Println("Got %s", respText)
+	fmt.Printf("Got %s", respText)
 	return respText, nil
 }
 
@@ -144,7 +144,7 @@ func Type() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	fmt.Println("Got %s", respText)
+	fmt.Printf("Got %s", respText)
 	return respText, nil	
 }
 
@@ -161,6 +161,7 @@ func ImageId() (string, error) {
 	}
 
 	if _, ok := data["imageId"]; ok {
+		fmt.Printf("Got %s", data["imageId"].(string))
 		return data["imageId"].(string), nil
 	}
 	
