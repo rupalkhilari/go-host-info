@@ -130,7 +130,7 @@ func Id() (string, error) {
 
 // Gets the zone name of the host
 func Zone() (string, error) {
-	respText, _, err := makeRequest(fmt.Sprintf("%s/availability-zone", INSTANCE_METADATA_URL))
+	respText, _, err := makeRequest(fmt.Sprintf("%s/placement/availability-zone", INSTANCE_METADATA_URL))
 	if err != nil {
 		return "", err
 	}
