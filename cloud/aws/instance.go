@@ -32,8 +32,6 @@ func makeRequest(url string) (string, int, error) {
 	// Make the request
 	resp, err := client.Do(req) 
 
-	fmt.Println("The response is", resp)
-	fmt.Println("The error is ", err)
 	if err != nil {
 		return "", 0, err
 	}
