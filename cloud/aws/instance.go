@@ -24,7 +24,7 @@ const (
 func makeRequest(url string) (string, int, error) {
 
 	// Construct an http Client with an acceptable timeout
-	client := &http.Client{Timeout: time.Second * 5}
+	client := http.Client{Timeout: time.Second * 5}
 
 	// Create a new http GET request with the given URL
 	req, err := http.NewRequest("GET", url, nil)
@@ -52,9 +52,9 @@ func makeRequest(url string) (string, int, error) {
 /* ========================== COMMON METHODS ============================ */
 
 // Ping the metadata server to check if it is reachable.
-// This server is only accessible from a GCP instances, hence
+// This server is only accessible from a AWS instances, hence
 // acts as a good indication of whether the host running this
-// function is a GCP instance.
+// function is a AWS instance.
 func HasMetadataHost() bool {
 	respText, statusCode, err := makeRequest(INSTANCE_METADATA_URL)
 	if err != nil {

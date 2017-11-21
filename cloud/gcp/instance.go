@@ -24,7 +24,7 @@ const (
 func makeRequest(url string) (string, int, error) {
 
 	// Construct an http Client with an acceptable timeout
-	client := &http.Client{Timeout: time.Second * 5}
+	client := http.Client{Timeout: time.Second * 5}
 
 	// Create a new http GET request with the given URL
 	req, err := http.NewRequest("GET", url, nil)
