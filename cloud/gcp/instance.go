@@ -91,7 +91,7 @@ func PublicHostname() (string, error) {
 	if len(names) == 0 {
 		return "", err
 	}
-	fmt.Println("Got %s", names[0])
+	fmt.Println("Got PublicHostname %s", names[0])
 	return names[0], nil
 }
 
@@ -101,7 +101,7 @@ func Hostname() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	fmt.Printf("Got %s", respText)
+	fmt.Printf("Got Hostname %s", respText)
 	return respText, nil
 }
 
@@ -112,7 +112,7 @@ func PublicIPAddress() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	fmt.Printf("Got %s", respText)
+	fmt.Printf("Got PublicIPAddress %s", respText)
 	return respText, nil
 }
 
@@ -123,7 +123,7 @@ func LocalIPAddress() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	fmt.Printf("Got %s", respText)
+	fmt.Printf("Got LocalIPAddress %s", respText)
 	return respText, nil
 }
 
@@ -133,7 +133,7 @@ func Id() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	fmt.Printf("Got %s", respText)
+	fmt.Printf("Got Id %s", respText)
 	return respText, nil
 }
 
@@ -143,7 +143,7 @@ func Zone() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	fmt.Printf("Got %s", respText)
+	fmt.Printf("Got Zone %s", respText)
 	return respText, nil
 }
 
@@ -153,7 +153,7 @@ func Type() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	fmt.Printf("Got %s", respText)
+	fmt.Printf("Got Type %s", respText)
 	return respText, nil
 }
 
@@ -165,7 +165,7 @@ func IsPreemptible() (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	fmt.Printf("Got %s", respText)
+	fmt.Printf("Got IsPreemptible %s", respText)
 	if respText == "TRUE" {
 		return true, nil
 	}
@@ -179,7 +179,7 @@ func Tags() ([]string, error) {
 	if err != nil {
 		return []string{}, err
 	}
-	fmt.Printf("Got %s", respText)
+	fmt.Printf("Got Tags %s", respText)
 	// Parse lines
 	tags := strings.Split(respText, "\n")
 	return tags, nil
