@@ -9,6 +9,7 @@ import (
 
 	"github.com/rupalkhilari/go-host-info/cloud/aws"
 	"github.com/rupalkhilari/go-host-info/cloud/gcp"
+	"github.com/rupalkhilari/go-host-info/cloud/azure"
 )
 
 type CloudProvider int
@@ -59,7 +60,11 @@ func IsCloudInstance() bool {
 	} else if gcp.HasMetadataHost() == true {
 		fmt.Println("This is a gcp host")
 		return true
-	} else {
+	} else if azure.HasMetadataHost() == true {
+		fmt.Println("This is an azure host")
+		return true
+	}
+	else {
 		fmt.Println("This host is not on any known cloud provider")
 	}
 	return false
@@ -100,6 +105,9 @@ func RunAWSCloudFuncs() {
 	aws.ImageId()
 }
 
+func RunAzureCloudFuncs() {
+	azure.GetInstanceData()
+}
 
 func GetHostname() (string, error) {
 	return os.Hostname()

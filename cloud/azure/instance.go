@@ -5,8 +5,13 @@
 
 package azure
 
+import (
+	"json"
+)
+
 const (
-	INSTANCE_METADATA_URL = "http://169.254.169.254/metadata/instance?api-version=2017-04-02"
+	INSTANCE_METADATA_URL = "http://169.254.169.254/metadata/instance"
+	API_VERSION_PARAMETER = "api-version=2017-04-02"
 )
 
 // Makes a request to the given url adding the required header data to
@@ -38,4 +43,45 @@ func makeRequest(url string) (string, int, error) {
 		return "", resp.StatusCode, err
 	}
 	return string(body), resp.StatusCode, err
+}
+
+func HasMetadataHost() {
+	respText, statusCode, err := makeRequest(INSTANCE_METADATA_URL)
+	if err != nil {
+		return false
+	}
+	if statusCode == http.StatusNotFound {
+		return false
+	}
+	fmt.Printf("Got HasMetadataHost %s", respText)
+	return true
+}
+
+func GetInstanceData() {
+	respText, _, err := makeRequest(
+		fmt.Sprintf("%s/?%s", (INSTANCE_METADATA_URL, API_VERSION_PARAMETER))
+
+	var data map[string]interface{}
+	if err := json.Unmarshal([]byte(respText), &data); err != nil {
+		return "", err
+	}
+	fmt.Println(respText)
+
+	/*
+	if _, ok := data["imageId"]; ok {
+		fmt.Printf("Got %s", data["imageId"].(string))
+		return data["imageId"].(string), nil
+	}
+	*/
+}
+
+// Gets the instance-ID of the host
+func Id() (string, error) {
+	respText, _, err := makeRequest(fmt.Sprintf("%s/compute/vmId?%s&format=text", 
+		INSTANCE_METADATA_URL, API_VERSION_PARAMETER))
+	if err != nil {
+		return "", err
+	}
+	fmt.Printf("Got Id %s", respText)
+	return respText, nil
 }
