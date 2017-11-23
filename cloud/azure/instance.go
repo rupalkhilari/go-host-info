@@ -6,7 +6,7 @@
 package azure
 
 import (
-	"json"
+	"encoding/json"
 )
 
 const (
