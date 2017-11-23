@@ -16,6 +16,7 @@ type CloudProvider int
 const (
 	GCP CloudProvider = iota
 	AWS
+	AZURE
 	UNKNOWN
 )
 
@@ -33,6 +34,8 @@ func main() {
 			RunGCPCloudFuncs()
 		case AWS:
 			RunAWSCloudFuncs()
+		case AZURE:
+			RunAzureCloudFuncs()
 		default:
 			fmt.Println("No implementation available")
 		}
