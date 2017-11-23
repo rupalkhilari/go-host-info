@@ -7,6 +7,10 @@ package azure
 
 import (
 	"encoding/json"
+	"fmt"
+	"net/http"
+	"time"
+	"io/ioutil"
 )
 
 const (
@@ -32,20 +36,25 @@ func makeRequest(url string) (string, int, error) {
 	resp, err := client.Do(req) 
 
 	if err != nil {
-		return "", resp.StatusCode, err
+		return "", 0, err
 	}
-	defer rs.Body.Close()
 
-	// Converts the response body bytes[] to a string
-	// and returns it
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return "", resp.StatusCode, err
+	if resp != nil {
+		defer resp.Body.Close()
+
+		// Converts the response body bytes[] to a string
+		// and returns it
+		body, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			return "", resp.StatusCode, err
+		}
+		return string(body), resp.StatusCode, err
+	} else {
+		return "", 0, err
 	}
-	return string(body), resp.StatusCode, err
 }
 
-func HasMetadataHost() {
+func HasMetadataHost() bool {
 	respText, statusCode, err := makeRequest(INSTANCE_METADATA_URL)
 	if err != nil {
 		return false
@@ -58,12 +67,12 @@ func HasMetadataHost() {
 }
 
 func GetInstanceData() {
-	respText, _, err := makeRequest(
-		fmt.Sprintf("%s/?%s", (INSTANCE_METADATA_URL, API_VERSION_PARAMETER))
+	respText, _, _ := makeRequest(
+		fmt.Sprintf("%s/?%s", INSTANCE_METADATA_URL, API_VERSION_PARAMETER))
 
 	var data map[string]interface{}
 	if err := json.Unmarshal([]byte(respText), &data); err != nil {
-		return "", err
+		fmt.Println(err)
 	}
 	fmt.Println(respText)
 

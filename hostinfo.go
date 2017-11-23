@@ -63,8 +63,7 @@ func IsCloudInstance() bool {
 	} else if azure.HasMetadataHost() == true {
 		fmt.Println("This is an azure host")
 		return true
-	}
-	else {
+	} else {
 		fmt.Println("This host is not on any known cloud provider")
 	}
 	return false
