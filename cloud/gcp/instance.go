@@ -91,7 +91,6 @@ func PublicHostname() (string, error) {
 	if len(names) == 0 {
 		return "", err
 	}
-	fmt.Println("Got PublicHostname %s", names[0])
 	return names[0], nil
 }
 

@@ -6,16 +6,16 @@
 package azure
 
 import (
-	"encoding/json"
 	"fmt"
+	"net"
 	"net/http"
 	"time"
 	"io/ioutil"
 )
 
 const (
-	INSTANCE_METADATA_URL = "http://169.254.169.254/metadata/instance"
-	API_VERSION_PARAMETER = "api-version=2017-04-02"
+	INSTANCE_METADATA_URL string = "http://169.254.169.254/metadata/instance"
+	API_VERSION string = "api-version=2017-04-02"
 )
 
 // Makes a request to the given url adding the required header data to
@@ -54,9 +54,42 @@ func makeRequest(url string) (string, int, error) {
 	}
 }
 
+/* ========================== COMMON METHODS ============================ */
+
+// Ping the metadata server to check if it is reachable.
+// This server is only accessible from a AWS instances, hence
+// acts as a good indication of whether the host running this
+// function is a AWS instance.
+// The URL returns a JSON structure with compute and network info for the instance.
+// {"compute":{"location":"westus",
+//				"name":"WinResServ16",
+// 				"offer":"WindowsServer",
+// 				"osType":"Windows",
+//				"platformFaultDomain":"0",
+//				"platformUpdateDomain":"0",
+//				"publisher":"MicrosoftWindowsServer",
+//				"sku":"2016-Datacenter",
+//				"version":"2016.127.20171017",
+//				"vmId":"9xxxxxxd-exxb-xxxd-9xxx-xxxxxxxxxxc0",
+//				"vmSize":"Standard_A1"},
+//	"network":{"interface":
+//				[{"ipv4":{"ipAddress":
+//							[{"privateIpAddress":"10.0.0.5",
+//					  		  "publicIpAddress":"xx.xxx.xxx.xx"}],
+//				  		  "subnet":
+//							[{"address":"10.0.0.0",
+//							  "prefix":"24"}]
+//						  },
+//				  "ipv6":{"ipAddress":
+//							[]
+//						  },
+//				  "macAddress":"0012345678AC"
+//				}]
+//			  }
+// }
 func HasMetadataHost() bool {
 	respText, statusCode, err := makeRequest(
-		fmt.Sprintf("%s/?%s", INSTANCE_METADATA_URL, API_VERSION_PARAMETER))
+		fmt.Sprintf("%s/?%s", INSTANCE_METADATA_URL, API_VERSION))
 
 	if err != nil {
 		return false
@@ -68,31 +101,183 @@ func HasMetadataHost() bool {
 	return true
 }
 
-func GetInstanceData() {
-	respText, _, _ := makeRequest(
-		fmt.Sprintf("%s/?%s", INSTANCE_METADATA_URL, API_VERSION_PARAMETER))
-
-	var data map[string]interface{}
-	if err := json.Unmarshal([]byte(respText), &data); err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println(respText)
-
-	/*
-	if _, ok := data["imageId"]; ok {
-		fmt.Printf("Got %s", data["imageId"].(string))
-		return data["imageId"].(string), nil
-	}
-	*/
-}
-
-// Gets the instance-ID of the host
-func Id() (string, error) {
-	respText, _, err := makeRequest(fmt.Sprintf("%s/compute/vmId?%s&format=text", 
-		INSTANCE_METADATA_URL, API_VERSION_PARAMETER))
+// Gets the FQDN or local hostname of the instance.
+func FQDN() (string, error) {
+	respText, _, err := makeRequest(fmt.Sprintf("%s/local-hostname", INSTANCE_METADATA_URL))
 	if err != nil {
 		return "", err
 	}
-	fmt.Printf("Got Id %s", respText)
+	fmt.Printf("Got FQDN %s", respText)
+	return respText, err
+}
+
+// check if this has a public hostname"
+func PublicHostname() (string, error) {
+	// perform a reverse NSLookup on the IP address.
+	address, err := PublicIPAddress()
+	if err != nil {
+		return "", err
+	}
+
+	names, err := net.LookupAddr(address)
+	if len(names) == 0 {
+		return "", err
+	}
+	return names[0], nil
+}
+
+// Gets the local hostname 
+func Hostname() (string, error) {
+	respText, _, err := makeRequest(
+		fmt.Sprintf("%s/compute/name?%s&format=text",
+			INSTANCE_METADATA_URL,
+			API_VERSION,
+		),
+	)
+	if err != nil {
+		return "", err
+	}
+	fmt.Printf("Got Hostname %s", respText)
+	return respText, nil
+}
+
+// Gets the Public/External IP Address 
+func PublicIPAddress() (string, error) {
+	respText, _, err := makeRequest(
+		fmt.Sprintf("%s/network/interface/0/ipv4/ipAddress/0/publicIpAddress?%s&format=text",
+			INSTANCE_METADATA_URL,
+			API_VERSION,
+		),
+	)
+	if err != nil {
+		return "", err
+	}
+	fmt.Printf("Got PublicIPAddress %s", respText)
+	return respText, nil
+}
+
+
+
+// Gets the Local IP Address of the host.
+func LocalIPAddress() (string, error) {
+	respText, _, err := makeRequest(
+		fmt.Sprintf("%s/network/interface/0/ipv4/ipAddress/0/privateIpAddress?%s&format=text",
+			INSTANCE_METADATA_URL,
+			API_VERSION,
+		),
+	)
+	if err != nil {
+		return "", err
+	}
+	fmt.Println("Got LocalIPAddress %s", respText)
+	return respText, nil
+}
+
+// ** Gets the instance-ID of the host
+func Id() (string, error) {
+	respText, _, err := makeRequest(
+		fmt.Sprintf("%s/compute/vmId?%s&format=text", 
+			INSTANCE_METADATA_URL,
+			API_VERSION,
+		),
+	)
+
+	if err != nil {
+		return "", err
+	}
+	fmt.Printf("Got Id %s\n", respText)
+	return respText, nil
+}
+
+// ** Gets the zone name of the host
+func Zone() (string, error) {
+	respText, _, err := makeRequest(
+		fmt.Sprintf("%s/compute/location?%s&format=text",
+			INSTANCE_METADATA_URL,
+			API_VERSION,
+		),
+	)
+	if err != nil {
+		return "", err
+	}
+	fmt.Printf("Got Zone %s", respText)
+	return respText, nil
+}
+
+// Gets the base machine type of the instance
+func Type() (string, error) {
+	respText, _, err := makeRequest(
+		fmt.Sprintf("%s/compute/vmSize?%s&format=text",
+			INSTANCE_METADATA_URL,
+			API_VERSION,
+		),
+	)
+
+	if err != nil {
+		return "", err
+	}
+	fmt.Printf("Got Type %s", respText)
+	return respText, nil	
+}
+
+/* ========================== INFORMATION UNIQUE TO AWS ======================= */
+// Gets the offer information of the VM image
+// This contains information only for images in the gallery.
+func Offer() (string, error) {
+	respText, _, err := makeRequest(
+		fmt.Sprintf("%s/compute/offer?%s&format=text",
+			INSTANCE_METADATA_URL,
+			API_VERSION,
+		),
+	)
+	if err != nil {
+		return "", err
+	}
+	fmt.Printf("Got Offer %s", respText)
+	return respText, nil
+}
+
+// Gets the name of the publisher of the VM image.
+func Publisher() (string, error) {
+	respText, _, err := makeRequest(
+		fmt.Sprintf("%s/compute/publisher?%s&format=text",
+			INSTANCE_METADATA_URL,
+			API_VERSION,
+		),
+	)
+	if err != nil {
+		return "", err
+	}
+	fmt.Printf("Got Publisher %s", respText)
+	return respText, nil
+}
+
+// Gets the Stock Keeping Unit (SKU) of the VM image.
+func SKU() (string, error) {
+	respText, _, err := makeRequest(
+		fmt.Sprintf("%s/compute/location?%s&format=text",
+			INSTANCE_METADATA_URL,
+			API_VERSION,
+		),
+	)
+	if err != nil {
+		return "", err
+	}
+	fmt.Printf("Got SKU %s", respText)
+	return respText, nil
+}
+
+// Gets the version of the VM image.
+func Version() (string, error) {
+	respText, _, err := makeRequest(
+		fmt.Sprintf("%s/compute/version?%s&format=text",
+			INSTANCE_METADATA_URL,
+			API_VERSION,
+		),
+	)
+	if err != nil {
+		return "", err
+	}
+	fmt.Printf("Got Version %s", respText)
 	return respText, nil
 }

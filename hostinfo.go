@@ -108,8 +108,17 @@ func RunAWSCloudFuncs() {
 }
 
 func RunAzureCloudFuncs() {
-	azure.GetInstanceData()
+	azure.PublicHostname()
+	azure.Hostname()
+	azure.LocalIPAddress()
+	azure.PublicIPAddress()
 	azure.Id()
+	azure.Zone()
+	azure.Type()
+	azure.Offer()
+	azure.Publisher()
+	azure.Version()
+	azure.SKU()
 }
 
 func GetHostname() (string, error) {
