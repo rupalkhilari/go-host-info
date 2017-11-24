@@ -100,7 +100,9 @@ func HasMetadataHost() bool {
 	fmt.Printf("Got HasMetadataHost %s", respText)
 	return true
 }
-// check if this has a public hostname"
+
+// Gets the public hostname of the public IP if any.
+// NOTE: Azure instances do not seem to have a public hostname.
 func PublicHostname() (string, error) {
 	// perform a reverse NSLookup on the IP address.
 	address, err := PublicIPAddress()
@@ -244,7 +246,7 @@ func Publisher() (string, error) {
 // Gets the Stock Keeping Unit (SKU) of the VM image.
 func SKU() (string, error) {
 	respText, _, err := makeRequest(
-		fmt.Sprintf("%s/compute/location?%s&format=text",
+		fmt.Sprintf("%s/compute/sku?%s&format=text",
 			INSTANCE_METADATA_URL,
 			API_VERSION,
 		),
