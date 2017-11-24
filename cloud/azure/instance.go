@@ -111,6 +111,9 @@ func PublicHostname() (string, error) {
 	}
 
 	names, err := net.LookupAddr(address)
+	fmt.Println("The names are")
+	fmt.Println(names)
+	fmt.Println(err)
 	if len(names) == 0 {
 		return "", err
 	}
