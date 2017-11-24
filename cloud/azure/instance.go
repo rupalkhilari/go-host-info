@@ -100,17 +100,6 @@ func HasMetadataHost() bool {
 	fmt.Printf("Got HasMetadataHost %s", respText)
 	return true
 }
-
-// Gets the FQDN or local hostname of the instance.
-func FQDN() (string, error) {
-	respText, _, err := makeRequest(fmt.Sprintf("%s/local-hostname", INSTANCE_METADATA_URL))
-	if err != nil {
-		return "", err
-	}
-	fmt.Printf("Got FQDN %s", respText)
-	return respText, err
-}
-
 // check if this has a public hostname"
 func PublicHostname() (string, error) {
 	// perform a reverse NSLookup on the IP address.

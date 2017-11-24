@@ -43,13 +43,13 @@ func main() {
 
 
 	/// Printing out the Go-host info.
-	fmt.Println(GetHostname())
+	//fmt.Println(GetHostname())
 
 	// Printing some static IP information
-	fmt.Println(GetCName())
-	fmt.Println(GetHostInfo())
-	fmt.Println(ExternalIP())
-	LookupHost()
+	//fmt.Println(GetCName())
+	//fmt.Println(GetHostInfo())
+	//fmt.Println(ExternalIP())
+	//LookupHost()
 
 
 }
@@ -108,7 +108,7 @@ func RunAWSCloudFuncs() {
 }
 
 func RunAzureCloudFuncs() {
-	azure.PublicHostname()
+	//azure.PublicHostname()
 	azure.Hostname()
 	azure.LocalIPAddress()
 	azure.PublicIPAddress()
