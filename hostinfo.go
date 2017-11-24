@@ -77,6 +77,8 @@ func DetermineCurrentCloud() CloudProvider {
 		return AWS
 	} else if gcp.HasMetadataHost() == true {
 		return GCP
+	} else if azure.HasMetadataHost() == true {
+		return AZURE
 	}
 	return UNKNOWN
 }
@@ -108,7 +110,7 @@ func RunAWSCloudFuncs() {
 }
 
 func RunAzureCloudFuncs() {
-	//azure.PublicHostname()
+	azure.PublicHostname()
 	azure.Hostname()
 	azure.LocalIPAddress()
 	azure.PublicIPAddress()
