@@ -55,7 +55,9 @@ func makeRequest(url string) (string, int, error) {
 }
 
 func HasMetadataHost() bool {
-	respText, statusCode, err := makeRequest(INSTANCE_METADATA_URL)
+	respText, statusCode, err := makeRequest(
+		fmt.Sprintf("%s/?%s", INSTANCE_METADATA_URL, API_VERSION_PARAMETER))
+
 	if err != nil {
 		return false
 	}
